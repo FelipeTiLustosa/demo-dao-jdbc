@@ -63,11 +63,55 @@ public class SellerDaoJDBC implements SellerDao {
     @Override
     public void update(Seller obj) {
 
+        PreparedStatement st = null;
+
+        try {
+            st = conn.prepareStatement(
+                    "UPDATE seller "
+                    + " SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? "
+                    + "WHERE Id = ? ");
+
+            st.setString(1, obj.getName());
+            st.setString(2, obj.getEmail());
+            st.setDate(3,java.sql.Date.valueOf(obj.getBirthDate())); // converte para Date
+            st.setDouble(4,obj.getSalary());
+            st.setInt(5, obj.getDepartment().getId());
+            st.setInt(6, obj.getId());
+
+            st.executeUpdate();
+
+        }
+        catch (SQLException e) {
+            throw  new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+        }
+
     }
 
     @Override
-    public void delete(Seller obj) {
+    public void deleteById(Integer id) {
+        PreparedStatement st = null;
 
+        try {
+            st = conn.prepareStatement("DELETE FROM seller WHERE Id = ? ");
+            st.setInt(1,id);
+
+            int rows = st.executeUpdate();
+            if (rows > 0) {
+                System.out.println("Delete completed rows affected: " + rows);
+            }
+            else {
+                throw new DbException("Unexpected erro! No rows affected!");
+            }
+        }
+        catch (SQLException e){
+            throw  new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+        }
     }
 
     @Override
