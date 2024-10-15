@@ -6,9 +6,11 @@ import model.dao.SellerDao;
 import model.entities.Department;
 
 import java.util.List;
+import java.util.Scanner;
 
 public class Program2 {
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
         System.out.println("=== TEST 1: department findyId ===");
         DepartmentDao departmentDao = DaoFactory.createDepartmentDao();
@@ -28,6 +30,12 @@ public class Program2 {
         dep1 = departmentDao.findById(dep1.getId());
         dep1.setName("Mercado");
         departmentDao.update(dep1);
+
+        System.out.println("\n=== TEST 5: department delete ===");
+        System.out.print("Enter id for delete test: ");
+        int deleteById = sc.nextInt();
+        departmentDao.deleteById(deleteById);
+
 
 
     }
